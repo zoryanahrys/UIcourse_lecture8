@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <style>
+       .page{
+           width: 500px;
+           height: auto;
+           margin: 0 auto;
+       }
+       
+       h1{
+           text-align: center;
+       }
+       
+       p{
+           font-size: 20px;
+           font-weight: bold;
+       }
+       
+       li{
+           border: 3px solid;
+           border-color: green;
+           padding: 5px;
+           font-size: 20px;
+           background-color: #67ff67;
+           width: 200px;
+           text-align: center;
+           margin: 1% 0;
+           cursor: move;
+           user-select: none;
+       }
+       
+       .li.over {
+          border: 2px dashed #000;
+        }
+    </style>
+    <div class="page">
+        <h1>JavaScript. Drag'n'Drop. Homework</h1>
+        <div>
+           <p>Яку з груп хотілося б поставити y списку першою?</p>
+            <ol id="list">
+                <li class="li" draggable="true" >The Beatles</li>
+                <li class="li" draggable="true" >Guns N Roses</li>
+                <li class="li" draggable="true" >AC/DC</li>
+                <li class="li" draggable="true" >Queen</li>
+                <li class="li" draggable="true" >Deep Purple</li>
+            </ol>
+        </div>
+    </div>
+    <script>
+       var dragSrcEl = null;
+        
+        function dragStart(e) {
+            dragSrcEl = this;
+
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function dragOver(e) {
+          if (e.preventDefault) {
+            e.preventDefault();
+          }
+
+          e.dataTransfer.dropEffect = 'move'; 
+
+          return false;
+        }
+
+        function dragEnter(e) {
+          this.classList.add('over');
+        }
+
+        function dragLeave(e) {
+          this.classList.remove('over');
+        }
+        
+        function drop(e) {
+          
+          if (e.stopPropagation) {
+            e.stopPropagation();
+          }
+            
+          if (dragSrcEl != this) {
+            dragSrcEl.innerHTML = this.innerHTML;
+            this.innerHTML = e.dataTransfer.getData('text/html');
+          }
+
+          return false;
+        }
+
+        function dragEnd(e) {
+
+          [].forEach.call(elems, function (el) {
+            el.classList.remove('over');
+          });
+        }
+
+        var elems = document.querySelectorAll('#list .li');
+        [].forEach.call(elems, function(el) {
+          el.addEventListener('dragstart', dragStart, false);
+          el.addEventListener('dragenter', dragEnter, false);
+          el.addEventListener('dragover', dragOver, false);
+          el.addEventListener('dragleave', dragLeave, false);
+          el.addEventListener('drop', drop, false);
+          el.addEventListener('dragend', dragEnd, false);
+        });
+
+    </script>
+</body>
+</html>
